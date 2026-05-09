@@ -48,9 +48,9 @@ const conversionTrend = [
 
 export const CrmDashboard: React.FC = () => {
   return (
-    <div className="space-y-8 pb-12 animate-in fade-in duration-700">
+    <div className="page-container">
       {/* CRM KPIs */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid-dashboard">
         <CrmStat 
           title="Total Global Leads" 
           value="4,280" 
@@ -77,9 +77,9 @@ export const CrmDashboard: React.FC = () => {
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid-main">
         {/* Customer Segments */}
-        <div className="card-premium p-8 flex flex-col shadow-xl">
+        <div className="card-premium flex flex-col">
           <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest flex items-center gap-2 italic mb-8">
             <Users className="w-4 h-4 text-indigo-500" />
             Market Segmentation
@@ -106,9 +106,9 @@ export const CrmDashboard: React.FC = () => {
               </PieChart>
             </ResponsiveContainer>
           </div>
-          <div className="grid grid-cols-2 gap-4 mt-auto">
+          <div className="grid grid-cols-2 gap-3 mt-auto">
             {customerSegment.map((item) => (
-              <div key={item.name} className="flex flex-col p-3 bg-slate-50 rounded-2xl border border-slate-100">
+              <div key={item.name} className="flex flex-col p-4 bg-slate-50/50 rounded-2xl border border-slate-100/50">
                 <div className="flex items-center gap-2 mb-1">
                   <div className="w-2 h-2 rounded-full" style={{ backgroundColor: item.color }} />
                   <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{item.name}</span>
@@ -120,16 +120,16 @@ export const CrmDashboard: React.FC = () => {
         </div>
 
         {/* Lead Conversion Trends */}
-        <div className="lg:col-span-2 card-premium p-8 shadow-xl">
-          <div className="flex items-center justify-between mb-8">
+        <div className="lg:col-span-2 card-premium">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
             <div>
               <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest italic">Lead Conversion Velocity</h3>
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Cross-Platform Funnel Efficiency</p>
+              <p className="text-subtitle mt-1 italic">Cross-Platform Funnel Efficiency</p>
             </div>
             <div className="flex items-center gap-4">
                <div className="flex items-center gap-2 px-3 py-1 bg-emerald-50 rounded-lg border border-emerald-100">
                   <TrendingUp className="w-3 h-3 text-emerald-500" />
-                  <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Efficient</span>
+                  <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest leading-none">Efficient</span>
                </div>
             </div>
           </div>
@@ -154,8 +154,8 @@ export const CrmDashboard: React.FC = () => {
       </div>
 
       {/* At-Risk Accounts */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="card-premium p-8 border-l-8 border-l-rose-500 shadow-2xl relative overflow-hidden">
+      <div className="grid-main">
+        <div className="lg:col-span-1 card-premium border-l-8 border-l-rose-500 relative overflow-hidden">
            <div className="absolute top-0 right-0 p-8 text-rose-500/10">
               <AlertCircle className="w-24 h-24" />
            </div>
@@ -170,30 +170,30 @@ export const CrmDashboard: React.FC = () => {
           </div>
         </div>
 
-        <div className="card-premium p-8 shadow-2xl bg-slate-900 text-white">
+        <div className="lg:col-span-2 card-premium bg-slate-900 text-white border-slate-800">
           <div className="flex items-center justify-between mb-8">
              <h4 className="text-xs font-black text-indigo-400 uppercase tracking-[0.2em] italic">CRM Activity Stream</h4>
              <span className="text-[10px] font-black uppercase text-slate-500">Live Updates</span>
           </div>
-          <div className="space-y-6">
-            <div className="flex items-start gap-4 p-4 bg-white/5 rounded-2xl border border-white/5 hover:bg-white/10 transition-all cursor-pointer group">
-               <div className="w-10 h-10 bg-indigo-500 rounded-xl flex items-center justify-center text-white italic font-black shadow-lg shadow-indigo-500/20 group-hover:scale-110 transition-transform">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="flex items-start gap-4 p-5 bg-white/5 rounded-2xl border border-white/5 hover:bg-white/10 transition-all cursor-pointer group">
+               <div className="w-12 h-12 bg-indigo-500 rounded-xl flex items-center justify-center text-white italic font-black shadow-lg shadow-indigo-500/20 group-hover:scale-110 transition-transform flex-shrink-0">
                   LD
                </div>
                <div>
                   <div className="text-sm font-black italic">Lead Converted: Thomas Müller</div>
-                  <div className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest mt-0.5">Value: $85,000 • Closed by Sarah J.</div>
-                  <div className="text-[10px] text-slate-500 italic mt-2 uppercase tracking-tighter">24 minutes ago</div>
+                  <div className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest mt-1">Value: $85,000 • Closed by Sarah J.</div>
+                  <div className="text-[10px] text-slate-500 italic mt-3 uppercase tracking-tighter">24 minutes ago</div>
                </div>
             </div>
-            <div className="flex items-start gap-4 p-4 bg-white/5 rounded-2xl border border-white/5 hover:bg-white/10 transition-all cursor-pointer group">
-               <div className="w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center text-white italic font-black shadow-lg shadow-amber-500/20 group-hover:scale-110 transition-transform">
+            <div className="flex items-start gap-4 p-5 bg-white/5 rounded-2xl border border-white/5 hover:bg-white/10 transition-all cursor-pointer group">
+               <div className="w-12 h-12 bg-amber-500 rounded-xl flex items-center justify-center text-white italic font-black shadow-lg shadow-amber-500/20 group-hover:scale-110 transition-transform flex-shrink-0">
                   TK
                </div>
                <div>
                   <div className="text-sm font-black italic">Task Completed: Spring Finalization</div>
-                  <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Entity: Zara International • Ref: TK-092</div>
-                  <div className="text-[10px] text-slate-500 italic mt-2 uppercase tracking-tighter">2 hours ago</div>
+                  <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Entity: Zara International • Ref: TK-092</div>
+                  <div className="text-[10px] text-slate-500 italic mt-3 uppercase tracking-tighter">2 hours ago</div>
                </div>
             </div>
           </div>

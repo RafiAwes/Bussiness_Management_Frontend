@@ -63,7 +63,7 @@ export const DepartmentRoles: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8 pb-20">
+    <div className="page-container">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
           <h3 className="text-xl font-black text-slate-900 italic tracking-tighter">Organizational Architecture</h3>

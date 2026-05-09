@@ -52,46 +52,47 @@ const orderStatusData = [
   { name: 'QC Check', value: 8, color: '#ec4899' },
 ];
 
-export const SalesDashboard: React.FC = () => {
-  return (
-    <div className="space-y-8 pb-12 animate-in fade-in duration-700">
-      {/* Top Indicators */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <KPIBox 
-          label="Total Sales (YTD)" 
-          value="$2.4M" 
-          sub="+12% from projected" 
-          icon={<TrendingUp className="w-5 h-5 text-indigo-600" />} 
-          trend="up"
-        />
-        <KPIBox 
-          label="Active Po Pipeline" 
-          value="45 Orders" 
-          sub="Value: $420,500" 
-          icon={<Package className="w-5 h-5 text-emerald-600" />} 
-        />
-        <KPIBox 
-          label="Supplier Health" 
-          value="94.2%" 
-          sub="Avg. Performance Score" 
-          icon={<Factory className="w-5 h-5 text-blue-600" />} 
-          trend="up"
-        />
-        <KPIBox 
-          label="Completed Orders" 
-          value="1,240" 
-          sub="98.5% On-Time delivery" 
-          icon={<CheckCircle2 className="w-5 h-5 text-amber-600" />} 
-        />
-      </div>
+export const SalesDashboard: React.FC<{ isNested?: boolean }> = ({ isNested }) => {
+  const content = (
+    <>
+      {!isNested && (
+        <div className="grid-dashboard">
+          <KPIBox 
+            label="Total Sales (YTD)" 
+            value="$2.4M" 
+            sub="+12% from projected" 
+            icon={<TrendingUp className="w-5 h-5 text-indigo-600" />} 
+            trend="up"
+          />
+          <KPIBox 
+            label="Active Po Pipeline" 
+            value="45 Orders" 
+            sub="Value: $420,500" 
+            icon={<Package className="w-5 h-5 text-emerald-600" />} 
+          />
+          <KPIBox 
+            label="Supplier Health" 
+            value="94.2%" 
+            sub="Avg. Performance Score" 
+            icon={<Factory className="w-5 h-5 text-blue-600" />} 
+            trend="up"
+          />
+          <KPIBox 
+            label="Completed Orders" 
+            value="1,240" 
+            sub="98.5% On-Time delivery" 
+            icon={<CheckCircle2 className="w-5 h-5 text-amber-600" />} 
+          />
+        </div>
+      )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid-main">
         {/* Main Performance Chart */}
-        <div className="lg:col-span-2 card-premium p-8 shadow-xl">
-          <div className="flex items-center justify-between mb-8">
+        <div className="lg:col-span-2 card-premium">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
             <div>
               <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest italic">Sales vs Supply Velocity</h3>
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Cross-Functional Integration</p>
+              <p className="text-subtitle mt-1 italic">Cross-Functional Integration</p>
             </div>
             <div className="flex items-center gap-6">
               <div className="flex items-center gap-2">
@@ -150,7 +151,7 @@ export const SalesDashboard: React.FC = () => {
         </div>
 
         {/* Status Distribution */}
-        <div className="card-premium p-8 shadow-xl flex flex-col">
+        <div className="card-premium flex flex-col">
           <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest flex items-center gap-2 italic mb-8">
             <AlertCircle className="w-4 h-4 text-indigo-500" />
             Supply Pipeline
@@ -180,8 +181,8 @@ export const SalesDashboard: React.FC = () => {
               <div key={status.name} className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full" style={{ backgroundColor: status.color }} />
                 <div className="flex flex-col">
-                  <span className="text-[10px] font-black text-slate-900 uppercase tracking-tighter italic">{status.name}</span>
-                  <span className="text-[10px] font-bold text-slate-400">{status.value} Orders</span>
+                  <span className="text-[10px] font-black text-slate-900 uppercase tracking-tighter italic leading-none truncate">{status.name}</span>
+                  <span className="text-[10px] font-bold text-slate-400 mt-1">{status.value} Orders</span>
                 </div>
               </div>
             ))}
@@ -189,10 +190,10 @@ export const SalesDashboard: React.FC = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid-main">
         {/* Supplier Performance */}
-        <div className="card-premium p-8 shadow-xl">
-           <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest italic mb-8">Factory Audit Performance</h3>
+        <div className="lg:col-span-2 card-premium">
+           <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest italic mb-8">Factory Audit</h3>
            <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={supplierPerformance} layout="vertical">
@@ -222,15 +223,18 @@ export const SalesDashboard: React.FC = () => {
         </div>
 
         {/* Global Market Share */}
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 h-full content-start">
           <RegionalCard region="North America" value="$842k" share={45} up />
           <RegionalCard region="European Union" value="$632k" share={32} up />
           <RegionalCard region="Asia Pacific" value="$284k" share={15} down />
           <RegionalCard region="Others" value="$142k" share={8} />
         </div>
       </div>
-    </div>
+    </>
   );
+
+  if (isNested) return <div className="space-y-6">{content}</div>;
+  return <div className="page-container">{content}</div>;
 };
 
 const RegionalCard = ({ region, value, share, up, down }: any) => (

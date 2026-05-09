@@ -34,7 +34,7 @@ const expenseDistribution = [
 
 const COLORS = ['#4f46e5', '#10b981', '#f59e0b', '#ef4444'];
 
-export const FinanceDashboard: React.FC = () => {
+export const FinanceDashboard: React.FC<{ isNested?: boolean }> = ({ isNested }) => {
   const { state } = useStore();
   
   // Use store revenue in stats
@@ -48,56 +48,57 @@ export const FinanceDashboard: React.FC = () => {
     { name: 'Jun', revenue: currentRevenue + 12000, expenses: 42000 },
   ];
 
-  return (
-    <div className="space-y-8 pb-12">
-      {/* Financial KPIs */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard 
-          title="Gross Profit" 
-          value="$151,580" 
-          trend="+22.1%" 
-          icon={<TrendingUp className="w-5 h-5 text-emerald-600" />}
-          color="emerald"
-        />
-        <StatCard 
-          title="Operating Expenses" 
-          value="$176,420" 
-          trend="+8.4%" 
-          icon={<Activity className="w-5 h-5 text-rose-600" />}
-          color="rose"
-        />
-        <StatCard 
-          title="Pending Payables" 
-          value="$42,850" 
-          trend="+2.1%" 
-          icon={<ArrowDownRight className="w-5 h-5 text-amber-600" />}
-          color="amber"
-        />
-        <StatCard 
-          title="Outstanding Dues" 
-          value="$98,400" 
-          trend="-5.4%" 
-          icon={<ArrowUpRight className="w-5 h-5 text-indigo-600" />}
-          color="indigo"
-        />
-      </div>
+  const content = (
+    <>
+      {!isNested && (
+        <div className="grid-dashboard">
+          <StatCard 
+            title="Gross Profit" 
+            value="$151,580" 
+            trend="+22.1%" 
+            icon={<TrendingUp className="w-5 h-5 text-emerald-600" />}
+            color="emerald"
+          />
+          <StatCard 
+            title="Operating Exp" 
+            value="$176,420" 
+            trend="+8.4%" 
+            icon={<Activity className="w-5 h-5 text-rose-600" />}
+            color="rose"
+          />
+          <StatCard 
+            title="Pending Payables" 
+            value="$42,850" 
+            trend="+2.1%" 
+            icon={<ArrowDownRight className="w-5 h-5 text-amber-600" />}
+            color="amber"
+          />
+          <StatCard 
+            title="Outstanding Dues" 
+            value="$98,400" 
+            trend="-5.4%" 
+            icon={<ArrowUpRight className="w-5 h-5 text-indigo-600" />}
+            color="indigo"
+          />
+        </div>
+      )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid-main">
         {/* Revenue vs Expenses Chart */}
-        <div className="lg:col-span-2 card-premium p-6">
-          <div className="flex items-center justify-between mb-8">
+        <div className="lg:col-span-2 card-premium">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
             <div>
-              <h3 className="font-bold text-slate-900">Financial Performance</h3>
-              <p className="text-xs text-slate-500 font-medium uppercase tracking-widest mt-1">Revenue vs Operating Expenses</p>
+              <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest italic">Financial Performance</h3>
+              <p className="text-subtitle mt-1 italic uppercase tracking-widest">Revenue vs Operating Expenses</p>
             </div>
             <div className="flex gap-4">
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full bg-indigo-600" />
-                <span className="text-[10px] font-bold text-slate-500 uppercase">Revenue</span>
+                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none">Revenue</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full bg-rose-500" />
-                <span className="text-[10px] font-bold text-slate-500 uppercase">Expenses</span>
+                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none">Expenses</span>
               </div>
             </div>
           </div>
@@ -134,9 +135,9 @@ export const FinanceDashboard: React.FC = () => {
         </div>
 
         {/* Expense Distribution */}
-        <div className="card-premium p-6 flex flex-col">
+        <div className="card-premium flex flex-col">
           <div className="flex items-center justify-between mb-8">
-            <h3 className="font-bold text-slate-900 flex items-center gap-2">
+            <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest flex items-center gap-2 italic">
               < PieChartIcon className="w-4 h-4 text-slate-400" />
               Expense Mix
             </h3>
@@ -163,12 +164,12 @@ export const FinanceDashboard: React.FC = () => {
           </div>
           <div className="space-y-3 mt-auto">
             {expenseDistribution.map((item, index) => (
-              <div key={item.name} className="flex items-center justify-between">
+              <div key={item.name} className="flex items-center justify-between p-2 bg-slate-50/50 rounded-lg border border-slate-100/50">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full" style={{ backgroundColor: COLORS[index] }} />
-                  <span className="text-xs font-medium text-slate-600">{item.name}</span>
+                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{item.name}</span>
                 </div>
-                <span className="text-xs font-bold text-slate-900">{item.value}%</span>
+                <span className="text-xs font-black text-slate-900 italic tabular-nums">{item.value}%</span>
               </div>
             ))}
           </div>
@@ -176,58 +177,61 @@ export const FinanceDashboard: React.FC = () => {
       </div>
 
       {/* Quick Action Panels */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="card-premium p-6 border-l-4 border-l-indigo-600">
-          <h4 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Urgent Tasks</h4>
+      <div className="grid-main">
+        <div className="lg:col-span-1 card-premium border-l-8 border-l-indigo-600">
+          <h4 className="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-6 italic">Urgent Fiscal Protocol</h4>
           <div className="space-y-4">
-            <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
+            <div className="flex items-center justify-between p-4 bg-slate-50/50 rounded-2xl border border-slate-100/50 group hover:border-slate-200 transition-all">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center">
-                  <CreditCard className="w-4 h-4" />
+                <div className="w-10 h-10 bg-amber-100/50 text-amber-600 rounded-xl flex items-center justify-center border border-amber-200/50">
+                  <CreditCard className="w-5 h-5" />
                 </div>
                 <div>
-                  <div className="text-sm font-bold text-slate-900">Utility Bill Due</div>
-                  <div className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Wasa Water Dept • $1,240</div>
+                  <div className="text-sm font-black text-slate-900 italic truncate">Utility Bill Due</div>
+                  <div className="text-[9px] text-slate-400 font-bold uppercase tracking-widest whitespace-nowrap">Wasa Water • $1,240</div>
                 </div>
               </div>
-              <button className="text-[10px] font-bold text-indigo-600 uppercase tracking-widest hover:underline">Pay Now</button>
+              <button className="text-[10px] font-black text-indigo-600 uppercase tracking-[0.2em] hover:underline whitespace-nowrap">Execute</button>
             </div>
-            <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
+            <div className="flex items-center justify-between p-4 bg-slate-50/50 rounded-2xl border border-slate-100/50 group hover:border-slate-200 transition-all">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-rose-100 text-rose-600 rounded-lg flex items-center justify-center">
-                  <FileText className="w-4 h-4" />
+                <div className="w-10 h-10 bg-rose-100/50 text-rose-600 rounded-xl flex items-center justify-center border border-rose-200/50">
+                  <FileText className="w-5 h-5" />
                 </div>
                 <div>
-                  <div className="text-sm font-bold text-slate-900">Tax Filing Deadline</div>
-                  <div className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">VAT Submission • In 2 Days</div>
+                  <div className="text-sm font-black text-slate-900 italic truncate">Tax Filing Deadline</div>
+                  <div className="text-[9px] text-slate-400 font-bold uppercase tracking-widest whitespace-nowrap">VAT Submission • 2 Days</div>
                 </div>
               </div>
-              <button className="text-[10px] font-bold text-indigo-600 uppercase tracking-widest hover:underline">Review</button>
+              <button className="text-[10px] font-black text-indigo-600 uppercase tracking-[0.2em] hover:underline whitespace-nowrap">Review</button>
             </div>
           </div>
         </div>
 
-        <div className="card-premium p-6 bg-slate-900 text-white">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center">
-              <TrendingUp className="w-5 h-5" />
+        <div className="lg:col-span-2 card-premium bg-slate-900 text-white border-slate-800">
+          <div className="flex items-center gap-4 mb-8">
+            <div className="w-14 h-14 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-xl shadow-indigo-600/20">
+              <TrendingUp className="w-7 h-7" />
             </div>
             <div>
-              <h4 className="text-base font-bold">Projected Net Profit</h4>
-              <p className="text-xs text-slate-400 uppercase tracking-widest font-medium">Q2 2024 Estimates</p>
+              <h4 className="text-xl font-black italic tracking-tighter uppercase whitespace-nowrap">Projected Net Profit</h4>
+              <p className="text-[10px] text-slate-400 uppercase tracking-[0.3em] font-black italic">Q2 2024 Final Est.</p>
             </div>
           </div>
-          <div className="text-4xl font-black mb-2">$842,500.00</div>
-          <p className="text-xs text-slate-400 leading-relaxed max-w-xs mb-8">
-            Based on current work orders in production and historically low overhead costs this quarter.
+          <div className="text-5xl font-black mb-4 italic tracking-tighter tabular-nums">$842,500.00</div>
+          <p className="text-xs text-slate-400 leading-relaxed max-w-sm mb-10 italic">
+            Based on current work orders in production and historically low overhead costs this fiscal quarter. Direct correlation with high conversion velocity.
           </p>
-          <button className="w-full btn-primary bg-indigo-600 border-0 hover:bg-indigo-500 py-3 text-xs uppercase tracking-widest font-black">
-            Download Financial Outlook
+          <button className="btn-primary w-full bg-indigo-600 hover:bg-indigo-500 py-4 text-[11px] uppercase tracking-[0.3em] font-black border-0 shadow-lg shadow-indigo-600/20">
+            Export Financial Forecast Report
           </button>
         </div>
       </div>
-    </div>
+    </>
   );
+
+  if (isNested) return <div className="space-y-6">{content}</div>;
+  return <div className="page-container">{content}</div>;
 };
 
 const StatCard = ({ title, value, trend, icon, color }: any) => (

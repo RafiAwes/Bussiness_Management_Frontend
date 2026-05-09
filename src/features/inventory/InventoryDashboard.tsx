@@ -25,7 +25,7 @@ import { cn } from '../../lib/utils';
 
 const COLORS = ['#6366f1', '#10b981', '#f59e0b'];
 
-export const InventoryDashboard: React.FC<{ onRestock: () => void }> = ({ onRestock }) => {
+export const InventoryDashboard: React.FC<{ isNested?: boolean, onRestock: () => void }> = ({ isNested, onRestock }) => {
   const { state } = useStore();
   
   // Transform store data for charts
@@ -41,65 +41,68 @@ export const InventoryDashboard: React.FC<{ onRestock: () => void }> = ({ onRest
     { name: 'Finished Goods', value: 15 },
   ];
 
-  return (
-    <div className="space-y-8 animate-in fade-in duration-500">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <div className="flex -space-x-2">
-            {[1, 2, 3].map(i => (
-              <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-slate-100 flex items-center justify-center text-[8px] font-black">WH{i}</div>
-            ))}
+  const content = (
+    <>
+      {!isNested && (
+        <>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <div className="flex -space-x-2">
+                {[1, 2, 3].map(i => (
+                  <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-slate-100 flex items-center justify-center text-[8px] font-black">WH{i}</div>
+                ))}
+              </div>
+              <p className="text-subtitle">Active Across 3 Locations</p>
+            </div>
+            <button 
+              onClick={onRestock}
+              className="btn-primary"
+            >
+              <Box className="w-4 h-4" />
+              Quick Restock Entry
+            </button>
           </div>
-          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Active Across 3 Locations</p>
-        </div>
-        <button 
-          onClick={onRestock}
-          className="px-6 py-3 bg-slate-900 text-white rounded-xl text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-2 hover:bg-emerald-600 transition-all shadow-lg"
-        >
-          <Box className="w-4 h-4" />
-          Quick Restock Entry
-        </button>
-      </div>
 
-      {/* Inventory KPIs */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard 
-          title="Stock Valuation" 
-          value="$142,500" 
-          trend="+12% vs LW"
-          icon={<Package className="w-5 h-5 text-indigo-600" />}
-          color="indigo"
-        />
-        <StatCard 
-          title="Low Stock Alerts" 
-          value="12" 
-          trend="Critical" 
-          icon={<AlertTriangle className="w-5 h-5 text-rose-600" />}
-          color="rose"
-        />
-        <StatCard 
-          title="Avg. Days to Stockout" 
-          value="18" 
-          trend="Stable" 
-          icon={<Layers className="w-5 h-5 text-amber-600" />}
-          color="amber"
-        />
-        <StatCard 
-          title="Inventory Turnover" 
-          value="4.2x" 
-          trend="Target 5x" 
-          icon={<BarChart3 className="w-5 h-5 text-blue-600" />}
-          color="blue"
-        />
-      </div>
+          <div className="grid-dashboard">
+            <StatCard 
+              title="Stock Valuation" 
+              value="$142,500" 
+              trend="+12% vs LW"
+              icon={<Package className="w-5 h-5 text-indigo-600" />}
+              color="indigo"
+            />
+            <StatCard 
+              title="Low Stock Alerts" 
+              value="12" 
+              trend="Critical" 
+              icon={<AlertTriangle className="w-5 h-5 text-rose-600" />}
+              color="rose"
+            />
+            <StatCard 
+              title="Avg. Days to Stockout" 
+              value="18" 
+              trend="Stable" 
+              icon={<Layers className="w-5 h-5 text-amber-600" />}
+              color="amber"
+            />
+            <StatCard 
+              title="Inventory Turnover" 
+              value="4.2x" 
+              trend="Target 5x" 
+              icon={<BarChart3 className="w-5 h-5 text-blue-600" />}
+              color="blue"
+            />
+          </div>
+        </>
+      )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid-main">
         {/* Stock Levels Chart */}
-        <div className="lg:col-span-2 card-premium p-8 border-slate-200/60">
-          <div className="flex items-center justify-between mb-8">
+        <div className="lg:col-span-2 card-premium">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
             <div>
-              <h3 className="text-sm font-bold text-slate-900 italic tracking-tight">Real-time Stock Levels</h3>
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Current Quantity vs Threshold</p>
+              <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest italic">Stock Analytics</h3>
+              <p className="text-subtitle mt-1 italic">Current Quantity vs Threshold</p>
             </div>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-1.5">
@@ -130,13 +133,12 @@ export const InventoryDashboard: React.FC<{ onRestock: () => void }> = ({ onRest
         </div>
 
         {/* Category Mix */}
-        <div className="card-premium p-8 border-slate-200/60">
-          <h3 className="text-sm font-bold text-slate-900 mb-2 italic tracking-tight">Stock Composition</h3>
-          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-8">Value by Processing Stage</p>
+        <div className="card-premium">
+          <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest italic mb-2">Stock Composition</h3>
+          <p className="text-subtitle mb-8 italic">Value by Processing Stage</p>
           <div className="h-[200px] w-full mb-8 relative">
              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <span className="text-2xl font-black text-slate-900 italic tracking-tighter">$142k</span>
-                <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Total Value</span>
+                <span className="text-2xl font-black text-slate-900 italic tracking-tighter tabular-nums text-center leading-none">$142k<br/><span className="text-[10px] text-slate-400 tracking-widest">Total Value</span></span>
              </div>
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -170,10 +172,10 @@ export const InventoryDashboard: React.FC<{ onRestock: () => void }> = ({ onRest
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="card-premium p-8 border-slate-200/60">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+        <div className="card-premium">
           <div className="flex items-center justify-between mb-6 pb-2 border-b border-slate-50">
-            <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Recent Stock Movements</h4>
+            <h4 className="text-subtitle italic">Recent Movements</h4>
             <ArrowRightLeft className="w-3.5 h-3.5 text-slate-300" />
           </div>
           <div className="space-y-5">
@@ -184,15 +186,15 @@ export const InventoryDashboard: React.FC<{ onRestock: () => void }> = ({ onRest
           </div>
         </div>
 
-        <div className="card-premium p-8 bg-slate-900 border-slate-800 text-white relative overflow-hidden">
+        <div className="card-premium bg-slate-900 border-slate-800 text-white relative">
           <div className="absolute top-0 right-0 w-32 h-32 bg-rose-500/10 rounded-full -mr-16 -mt-16 blur-2xl" />
           <div className="flex items-center gap-4 mb-8">
             <div className="w-12 h-12 bg-rose-600/20 border border-rose-500/30 rounded-2xl flex items-center justify-center">
               <AlertTriangle className="w-6 h-6 text-rose-500" />
             </div>
             <div>
-              <h4 className="text-sm font-bold italic tracking-tight text-white">Critical Low Stock Alerts</h4>
-              <p className="text-[10px] text-rose-500 font-bold uppercase tracking-widest">Immediate procurement required</p>
+              <h4 className="text-sm font-black italic tracking-tighter uppercase text-white">Critical Stock Alerts</h4>
+              <p className="text-[10px] text-rose-500 font-black uppercase tracking-widest italic">Immediate procurement required</p>
             </div>
           </div>
           <div className="space-y-4">
@@ -214,8 +216,11 @@ export const InventoryDashboard: React.FC<{ onRestock: () => void }> = ({ onRest
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
+
+  if (isNested) return <div className="space-y-6">{content}</div>;
+  return <div className="page-container">{content}</div>;
 };
 
 const MovementRow = ({ type, item, qty, date, subtitle }: any) => (

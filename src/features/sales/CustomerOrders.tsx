@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Download, ExternalLink, Filter, Calendar, Tag, User, CreditCard, Factory, CheckCircle2, ChevronDown, Plus, X, Package, DollarSign } from 'lucide-react';
+import { Search, Download, ExternalLink, Filter, User, CreditCard, Factory, CheckCircle2, Plus, X, Package, DollarSign } from 'lucide-react';
 import { cn } from '../../lib/utils';
 
 const SUPPLIERS = [
@@ -16,7 +16,7 @@ const INITIAL_ORDERS = [
   { id: 'SO-4404', client: 'Private Label Co', quantity: 1200, value: 12000.00, date: '2024-04-28', payment: 'Paid', status: 'Delivered', supplier: 'Smart Stitching' },
 ];
 
-export const CustomerOrders: React.FC = () => {
+export const CustomerOrders: React.FC<{ minimal?: boolean }> = ({ minimal }) => {
   const [orders, setOrders] = useState(INITIAL_ORDERS);
   const [assigningId, setAssigningId] = useState<string | null>(null);
   const [generatedPoIds, setGeneratedPoIds] = useState<Set<string>>(new Set());
@@ -54,133 +54,141 @@ export const CustomerOrders: React.FC = () => {
 
   const handleGeneratePo = (orderId: string) => {
     setGeneratedPoIds(prev => new Set(prev).add(orderId));
-    // Simulate navigation or success
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-500">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
-          <input 
-            type="text" 
-            placeholder="Search global clients / orders..." 
-            className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-accent/20 transition-all font-medium italic"
-          />
+    <div className={cn("space-y-6", !minimal && "animate-in fade-in duration-500")}>
+      {!minimal && (
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="relative flex-1 max-w-md">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
+            <input 
+              type="text" 
+              placeholder="Search global clients / orders..." 
+              className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-accent/20 transition-all font-medium italic"
+            />
+          </div>
+          <div className="flex items-center gap-3">
+            <button className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2 transition-all">
+              <Filter className="w-3.5 h-3.5" /> Advance Filters
+            </button>
+            <button 
+              onClick={() => setIsBookingOrder(true)}
+              className="px-6 py-3 bg-slate-900 text-white rounded-xl text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-2 hover:bg-emerald-600 transition-all shadow-lg"
+            >
+              <Plus className="w-4 h-4" /> Book New Order
+            </button>
+            <button className="px-6 py-3 bg-slate-100 text-slate-900 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-2 hover:bg-slate-200 transition-all">
+              <Download className="w-4 h-4" /> Export Manifest
+            </button>
+          </div>
         </div>
-        <div className="flex items-center gap-3">
-          <button className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2 transition-all">
-            <Filter className="w-3.5 h-3.5" /> Advance Filters
-          </button>
-          <button 
-            onClick={() => setIsBookingOrder(true)}
-            className="px-6 py-3 bg-slate-900 text-white rounded-xl text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-2 hover:bg-emerald-600 transition-all shadow-lg"
-          >
-            <Plus className="w-4 h-4" /> Book New Order
-          </button>
-          <button className="px-6 py-3 bg-slate-100 text-slate-900 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-2 hover:bg-slate-200 transition-all">
-            <Download className="w-4 h-4" /> Export Manifest
-          </button>
-        </div>
-      </div>
+      )}
 
       <div className="card-premium overflow-hidden border-slate-200/60 shadow-xl">
-        <table className="w-full text-left">
-          <thead className="bg-slate-50 border-b border-slate-200">
-            <tr>
-              <th className="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Order Ref</th>
-              <th className="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Global Client</th>
-              <th className="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Units</th>
-              <th className="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Contract Value</th>
-              <th className="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Lead Supplier</th>
-              <th className="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Lifecycle</th>
-              <th className="px-6 py-5"></th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100">
-            {orders.map((order) => (
-              <tr key={order.id} className="hover:bg-slate-50/50 transition-colors group">
-                <td className="px-6 py-5">
-                  <span className="text-xs font-black text-slate-900 font-mono tracking-tighter italic">#{order.id}</span>
-                </td>
-                <td className="px-6 py-5">
-                  <div className="flex items-center gap-2">
-                    <User className="w-4 h-4 text-slate-300" />
-                    <span className="text-sm font-black text-slate-900 italic tracking-tight">{order.client}</span>
-                  </div>
-                </td>
-                <td className="px-6 py-5 text-right">
-                  <div className="text-sm font-black text-slate-700 tabular-nums">{order.quantity.toLocaleString()} <span className="text-[9px] text-slate-400">PCS</span></div>
-                </td>
-                <td className="px-6 py-5">
-                  <div className="text-sm font-black text-indigo-600 tabular-nums">${order.value.toLocaleString(undefined, { minimumFractionDigits: 2 })}</div>
-                  <div className="text-[9px] font-bold text-slate-400 uppercase tracking-tight">{order.payment}</div>
-                </td>
-                <td className="px-6 py-5">
-                  {order.supplier ? (
-                    <div className="flex flex-col gap-2">
-                      <div className="w-fit p-1 px-2.5 bg-indigo-50 border border-indigo-100 rounded-lg flex items-center gap-2">
-                        <Factory className="w-3 h-3 text-indigo-500" />
-                        <span className="text-[10px] font-black text-indigo-700 uppercase italic tracking-tight">{order.supplier}</span>
-                      </div>
-                      {!generatedPoIds.has(order.id) ? (
-                        <button 
-                          onClick={() => handleGeneratePo(order.id)}
-                          className="w-fit text-[9px] font-black text-indigo-500 hover:text-indigo-700 underline decoration-indigo-300 decoration-2 underline-offset-2 uppercase tracking-widest"
-                        >
-                          Generate PO
-                        </button>
-                      ) : (
-                        <div className="flex items-center gap-1 text-[9px] font-black text-emerald-500 uppercase tracking-widest">
-                           <CheckCircle2 className="w-3 h-3" /> PO Generated
-                        </div>
-                      )}
+        {minimal && (
+          <div className="p-6 border-b border-slate-50 flex items-center justify-between bg-white">
+            <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest italic">Global Order Registry</h3>
+            <span className="text-[10px] font-black text-indigo-500 uppercase tracking-widest">Enterprise Ledger</span>
+          </div>
+        )}
+        <div className="overflow-x-auto">
+          <table className="w-full text-left">
+            <thead className="bg-slate-50 border-b border-slate-200">
+              <tr>
+                <th className="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Order Ref</th>
+                <th className="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Global Client</th>
+                <th className="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Units</th>
+                <th className="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Contract Value</th>
+                <th className="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Lead Supplier</th>
+                <th className="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Lifecycle</th>
+                <th className="px-6 py-5"></th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {orders.map((order) => (
+                <tr key={order.id} className="hover:bg-slate-50/50 transition-colors group">
+                  <td className="px-6 py-5">
+                    <span className="text-xs font-black text-slate-900 font-mono tracking-tighter italic">#{order.id}</span>
+                  </td>
+                  <td className="px-6 py-5">
+                    <div className="flex items-center gap-2">
+                      <User className="w-4 h-4 text-slate-300" />
+                      <span className="text-sm font-black text-slate-900 italic tracking-tight">{order.client}</span>
                     </div>
-                  ) : (
-                    assigningId === order.id ? (
-                      <div className="relative animate-in zoom-in-95 duration-200">
-                        <select 
-                          autoFocus
-                          onBlur={() => setAssigningId(null)}
-                          onChange={(e) => handleAssignSupplier(order.id, e.target.value)}
-                          className="w-full px-3 py-1.5 bg-white border border-indigo-300 rounded-lg text-[10px] font-black text-indigo-600 outline-none shadow-lg appearance-none cursor-pointer"
-                        >
-                          <option value="">Select Factory...</option>
-                          {SUPPLIERS.map(s => <option key={s} value={s}>{s}</option>)}
-                        </select>
+                  </td>
+                  <td className="px-6 py-5 text-right">
+                    <div className="text-sm font-black text-slate-700 tabular-nums">{order.quantity.toLocaleString()} <span className="text-[9px] text-slate-400">PCS</span></div>
+                  </td>
+                  <td className="px-6 py-5">
+                    <div className="text-sm font-black text-indigo-600 tabular-nums">${order.value.toLocaleString(undefined, { minimumFractionDigits: 2 })}</div>
+                    <div className="text-[9px] font-bold text-slate-400 uppercase tracking-tight">{order.payment}</div>
+                  </td>
+                  <td className="px-6 py-5">
+                    {order.supplier ? (
+                      <div className="flex flex-col gap-2">
+                        <div className="w-fit p-1 px-2.5 bg-indigo-50 border border-indigo-100 rounded-lg flex items-center gap-2">
+                          <Factory className="w-3 h-3 text-indigo-500" />
+                          <span className="text-[10px] font-black text-indigo-700 uppercase italic tracking-tight">{order.supplier}</span>
+                        </div>
+                        {!generatedPoIds.has(order.id) ? (
+                          <button 
+                            onClick={() => handleGeneratePo(order.id)}
+                            className="w-fit text-[9px] font-black text-indigo-500 hover:text-indigo-700 underline decoration-indigo-300 decoration-2 underline-offset-2 uppercase tracking-widest"
+                          >
+                            Generate PO
+                          </button>
+                        ) : (
+                          <div className="flex items-center gap-1 text-[9px] font-black text-emerald-500 uppercase tracking-widest">
+                             <CheckCircle2 className="w-3 h-3" /> PO Generated
+                          </div>
+                        )}
                       </div>
                     ) : (
-                      <button 
-                        onClick={() => setAssigningId(order.id)}
-                        className="flex items-center gap-1.5 px-3 py-1 text-[9px] font-black text-slate-400 border border-dashed border-slate-300 rounded-lg hover:border-indigo-400 hover:text-indigo-600 transition-all uppercase tracking-[0.1em]"
-                      >
-                        <Plus className="w-3 h-3" /> Assign Supplier
-                      </button>
-                    )
-                  )}
-                </td>
-                <td className="px-6 py-5 text-center">
-                  <span className={cn(
-                    "text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-widest border shadow-sm",
-                    order.status === 'Delivered' ? "bg-emerald-50 text-emerald-600 border-emerald-100" :
-                    order.status === 'Booked' ? "bg-indigo-50 text-indigo-600 border-indigo-100" :
-                    "bg-amber-50 text-amber-600 border-amber-100"
-                  )}>
-                    {order.status}
-                  </span>
-                </td>
-                <td className="px-6 py-5 text-right">
-                  <button className="p-2 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-indigo-600 transition-all">
-                    <ExternalLink className="w-4 h-4" />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                      assigningId === order.id ? (
+                        <div className="relative">
+                          <select 
+                            autoFocus
+                            onBlur={() => setAssigningId(null)}
+                            onChange={(e) => handleAssignSupplier(order.id, e.target.value)}
+                            className="w-full px-3 py-1.5 bg-white border border-indigo-300 rounded-lg text-[10px] font-black text-indigo-600 outline-none shadow-lg appearance-none cursor-pointer"
+                          >
+                            <option value="">Select Factory...</option>
+                            {SUPPLIERS.map(s => <option key={s} value={s}>{s}</option>)}
+                          </select>
+                        </div>
+                      ) : (
+                        <button 
+                          onClick={() => setAssigningId(order.id)}
+                          className="flex items-center gap-1.5 px-3 py-1 text-[9px] font-black text-slate-400 border border-dashed border-slate-300 rounded-lg hover:border-indigo-400 hover:text-indigo-600 transition-all uppercase tracking-[0.1em]"
+                        >
+                          <Plus className="w-3 h-3" /> Assign Supplier
+                        </button>
+                      )
+                    )}
+                  </td>
+                  <td className="px-6 py-5 text-center">
+                    <span className={cn(
+                      "text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-widest border shadow-sm",
+                      order.status === 'Delivered' ? "bg-emerald-50 text-emerald-600 border-emerald-100" :
+                      order.status === 'Booked' ? "bg-indigo-50 text-indigo-600 border-indigo-100" :
+                      "bg-amber-50 text-amber-600 border-amber-100"
+                    )}>
+                      {order.status}
+                    </span>
+                  </td>
+                  <td className="px-6 py-5 text-right">
+                    <button className="p-2 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-indigo-600 transition-all">
+                      <ExternalLink className="w-4 h-4" />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      {/* Booking Modal */}
       {isBookingOrder && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-[40px] w-full max-w-2xl shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] overflow-hidden animate-in zoom-in-95 duration-300">
@@ -207,7 +215,7 @@ export const CustomerOrders: React.FC = () => {
                     <input 
                       required
                       type="text" 
-                      placeholder="e.g. Nordstrom SE"
+                      placeholder=" Nordstrom SE"
                       value={newOrder.client}
                       onChange={(e) => setNewOrder({ ...newOrder, client: e.target.value })}
                       className="w-full pl-12 pr-5 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl text-sm font-black italic outline-none focus:border-emerald-500 transition-all font-sans"
@@ -222,7 +230,7 @@ export const CustomerOrders: React.FC = () => {
                     <input 
                       required
                       type="number" 
-                      placeholder="e.g. 5000"
+                      placeholder="5000"
                       value={newOrder.quantity}
                       onChange={(e) => setNewOrder({ ...newOrder, quantity: e.target.value })}
                       className="w-full pl-12 pr-5 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl text-sm font-black italic outline-none focus:border-emerald-500 transition-all font-sans tabular-nums"
@@ -237,7 +245,7 @@ export const CustomerOrders: React.FC = () => {
                     <input 
                       required
                       type="number" 
-                      placeholder="e.g. 125000"
+                      placeholder="125000"
                       value={newOrder.value}
                       onChange={(e) => setNewOrder({ ...newOrder, value: e.target.value })}
                       className="w-full pl-12 pr-5 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl text-sm font-black italic outline-none focus:border-emerald-500 transition-all font-sans tabular-nums"

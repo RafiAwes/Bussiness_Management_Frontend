@@ -44,40 +44,41 @@ const maintenanceStats = [
   { subject: 'Cooling', A: 110, fullMark: 150 },
 ];
 
-export const ProductionDashboard: React.FC = () => {
-  return (
-    <div className="space-y-8 pb-12 animate-in fade-in duration-700">
-      {/* Factory KPI Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <ProductionStat 
-          label="Total Output Today" 
-          value="12,480" 
-          status="On Track"
-          icon={<Zap className="w-5 h-5 text-indigo-500" />}
-          trend="+8%"
-        />
-        <ProductionStat 
-          label="Active Work Orders" 
-          value="24" 
-          status="Optimal"
-          icon={<Cpu className="w-5 h-5 text-emerald-500" />}
-        />
-        <ProductionStat 
-          label="Orders Delayed" 
-          value="03" 
-          status="Warning"
-          icon={<AlertOctagon className="w-5 h-5 text-rose-500" />}
-          invert
-          trend="Critical"
-        />
-        <ProductionStat 
-          label="Global Efficiency" 
-          value="91.2%" 
-          status="Minimal"
-          icon={<Activity className="w-5 h-5 text-amber-500" />}
-          trend="+2.4%"
-        />
-      </div>
+export const ProductionDashboard: React.FC<{ isNested?: boolean }> = ({ isNested }) => {
+  const content = (
+    <>
+      {!isNested && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <ProductionStat 
+            label="Total Output Today" 
+            value="12,480" 
+            status="On Track"
+            icon={<Zap className="w-5 h-5 text-indigo-500" />}
+            trend="+8%"
+          />
+          <ProductionStat 
+            label="Active Work Orders" 
+            value="24" 
+            status="Optimal"
+            icon={<Cpu className="w-5 h-5 text-emerald-500" />}
+          />
+          <ProductionStat 
+            label="Orders Delayed" 
+            value="03" 
+            status="Warning"
+            icon={<AlertOctagon className="w-5 h-5 text-rose-500" />}
+            invert
+            trend="Critical"
+          />
+          <ProductionStat 
+            label="Global Efficiency" 
+            value="91.2%" 
+            status="Minimal"
+            icon={<Activity className="w-5 h-5 text-amber-500" />}
+            trend="+2.4%"
+          />
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Real-time Efficiency Area Chart */}
@@ -145,8 +146,11 @@ export const ProductionDashboard: React.FC = () => {
         <LineStatusCard unit="Line B (Sec)" item="Cotton Pants" status="In Maintenance" load={0} isDown />
         <LineStatusCard unit="Line C (Batch)" item="Denim Jacket" status="Peak Performance" load={98} />
       </div>
-    </div>
+    </>
   );
+
+  if (isNested) return <div className="space-y-6">{content}</div>;
+  return <div className="page-container">{content}</div>;
 };
 
 const LineStatusCard = ({ unit, item, status, load, isDown }: any) => (

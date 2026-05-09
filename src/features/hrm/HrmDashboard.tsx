@@ -34,9 +34,9 @@ const attendanceData = [
 
 export const HrmDashboard: React.FC = () => {
   return (
-    <div className="space-y-8 pb-12 animate-in fade-in duration-500">
+    <div className="page-container">
       {/* Workforce KPIs */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid-dashboard">
         <HrmStat 
           title="Consolidated Workforce" 
           value="342" 
@@ -65,16 +65,16 @@ export const HrmDashboard: React.FC = () => {
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid-main">
         {/* Attendance Trends */}
-        <div className="lg:col-span-2 card-premium p-8 border-2 border-slate-50 shadow-2xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-8 opacity-[0.03]">
+        <div className="lg:col-span-2 card-premium relative">
+          <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none">
              <TrendingUp className="w-64 h-64" />
           </div>
-          <div className="relative z-10 flex items-center justify-between mb-10">
+          <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10">
             <div>
               <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest italic">Workforce Presence Analytics</h3>
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-1 italic tracking-tight">Cross-Location Engagement (Weekly Snapshot)</p>
+              <p className="text-subtitle mt-1 italic">Cross-Location Engagement (Weekly Snapshot)</p>
             </div>
             <div className="flex gap-2">
                <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 rounded-lg border border-slate-100">
@@ -105,11 +105,11 @@ export const HrmDashboard: React.FC = () => {
         </div>
 
         {/* Notifications / Alerts Panel */}
-        <div className="card-premium p-8 border-2 border-slate-100 shadow-2xl flex flex-col">
+        <div className="card-premium flex flex-col">
            <div className="flex items-center justify-between mb-8">
               <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest italic flex items-center gap-3">
                  <Bell className="w-4 h-4 text-indigo-500" />
-                 HR Intelligence Hub
+                 Intelligence Hub
               </h3>
               <div className="w-2 h-2 bg-rose-500 rounded-full animate-ping" />
            </div>
@@ -124,36 +124,29 @@ export const HrmDashboard: React.FC = () => {
               <AlertItem 
                 type="Update" 
                 title="Payroll Finalization" 
-                msg="6 days remaining for May disbursement schedule." 
+                msg="6 days remaining for disbursement." 
                 icon={<Clock className="w-4 h-4" />}
                 color="indigo"
               />
               <AlertItem 
                 type="Request" 
-                title="New Leave Authorization" 
+                title="Leave Authorization" 
                 msg="Jane Smith requested 5 days Annual Leave." 
                 icon={<Calendar className="w-4 h-4" />}
                 color="amber"
               />
-              <AlertItem 
-                type="Review" 
-                title="Performance Benchmarks" 
-                msg="John Doe exceeded monthly sales target by 14%." 
-                icon={<Award className="w-4 h-4" />}
-                color="emerald"
-              />
            </div>
-           <button className="w-full mt-8 py-5 border-2 border-slate-100 rounded-[32px] text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 hover:text-indigo-600 hover:border-indigo-100 transition-all italic bg-slate-50">
-              Access Full Alert Ledger
+           <button className="btn-secondary w-full mt-8">
+              Access Full Ledger
            </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
          {/* Department Activity */}
-         <div className="card-premium p-8 border-2 border-slate-100 shadow-xl overflow-hidden group">
+         <div className="card-premium group">
             <div className="flex items-center justify-between mb-8">
-               <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest italic group-hover:translate-x-1 transition-transform">Entity Productivity Index</h4>
+               <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest italic">Productivity Index</h4>
                <Briefcase className="w-5 h-5 text-slate-300" />
             </div>
             <div className="space-y-6">
@@ -164,20 +157,20 @@ export const HrmDashboard: React.FC = () => {
          </div>
 
          {/* Upcoming Corporate events */}
-         <div className="card-premium p-8 border-2 border-slate-100 shadow-xl relative overflow-hidden">
-            <div className="absolute -bottom-10 -right-10 opacity-[0.02]">
+         <div className="card-premium relative">
+            <div className="absolute -bottom-10 -right-10 opacity-[0.02] pointer-events-none">
                <Calendar className="w-48 h-48" />
             </div>
             <div className="flex items-center justify-between mb-8">
                <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest italic">Institutional Timeline</h4>
                <span className="text-[9px] font-black bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full border border-indigo-100">May/Jun Cycle</span>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                <EventCard title="Q2 Assessment" date="May 15" sub="Review Hub" icon={<Award className="w-4 h-4" />} />
                <EventCard title="Safety Protocol" date="May 18" sub="Training Hall" icon={<Shield className="w-4 h-4" />} />
             </div>
-            <button className="w-full mt-8 py-4 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-xl italic">
-               Master Operational Calendar
+            <button className="btn-primary w-full mt-8">
+               Operational Calendar
             </button>
          </div>
       </div>

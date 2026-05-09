@@ -44,34 +44,38 @@ const LoginPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-2xl p-8">
+    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-6">
+      <div className="max-w-md w-full bg-white rounded-3xl shadow-2xl overflow-hidden p-10 animate-in fade-in zoom-in duration-700">
         <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-slate-900 rounded-2xl mb-4">
-            <Scissors className="text-white w-8 h-8" />
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-slate-900 rounded-[2rem] mb-6 shadow-xl shadow-slate-900/20">
+            <Scissors className="text-white w-10 h-10" />
           </div>
-          <h1 className="text-2xl font-bold text-slate-900">DressTown ERP</h1>
-          <p className="text-slate-500 mt-2 text-sm">Enterprise Management & Production Control</p>
+          <h1 className="text-3xl font-black text-slate-900 tracking-tighter italic uppercase">DressTown ERP</h1>
+          <p className="text-subtitle mt-2 italic">Standardized Enterprise OS v2.0</p>
         </div>
 
-        <div className="grid gap-3">
+        <div className="grid gap-4">
           {roleOptions.map(({ role, icon: Icon, color }) => (
             <button
               key={role}
               onClick={() => login(role)}
-              className="group flex items-center gap-4 w-full p-4 rounded-xl border-2 border-slate-100 hover:border-accent hover:bg-slate-50 transition-all text-left"
+              className="group flex items-center gap-4 w-full p-5 rounded-2xl border border-slate-100 hover:border-accent hover:bg-slate-50 transition-all text-left shadow-sm hover:shadow-md"
               id={`login-role-${role}`}
             >
-              <div className={`w-10 h-10 ${color} rounded-lg flex items-center justify-center text-white`}>
-                <Icon className="w-5 h-5" />
+              <div className={`w-12 h-12 ${color} rounded-xl flex items-center justify-center text-white shadow-lg`}>
+                <Icon className="w-6 h-6" />
               </div>
               <div className="flex-1">
-                <div className="font-semibold text-slate-900 capitalize text-sm">{role} Access</div>
-                <div className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">Secure Entry</div>
+                <div className="font-black text-slate-900 capitalize text-sm italic tracking-tight">{role} Command</div>
+                <div className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Authorized Entry Only</div>
               </div>
-              <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-accent transition-colors" />
+              <ArrowRight className="w-5 h-5 text-slate-300 group-hover:text-accent group-hover:translate-x-1 transition-all" />
             </button>
           ))}
+        </div>
+        
+        <div className="mt-10 pt-8 border-t border-slate-50 text-center">
+            <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em]">Build Code: DT-OS-2024-X</p>
         </div>
       </div>
     </div>
@@ -80,17 +84,20 @@ const LoginPage = () => {
 
 // Generic Module Placeholder
 const ModulePage = ({ name, description }: { name: string, description: string }) => (
-  <div className="space-y-6">
-    <div className="p-8 bg-white border border-slate-200 rounded-2xl shadow-sm">
-      <h2 className="text-2xl font-bold text-slate-900 mb-2">{name}</h2>
-      <p className="text-slate-500 text-sm">{description}</p>
+  <div className="page-container space-y-8">
+    <div className="card-premium">
+      <h2 className="text-title italic uppercase mb-2">{name} Command Center</h2>
+      <p className="text-subtitle italic">{description}</p>
     </div>
     
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="grid-main">
       {[1, 2, 3].map(i => (
-        <div key={i} className="h-48 bg-slate-100/50 border border-dashed border-slate-300 rounded-xl flex flex-col items-center justify-center text-slate-400 gap-2">
-          <Package className="w-6 h-6 opacity-20" />
-          <span className="text-[10px] font-bold uppercase tracking-widest">Awaiting Data Implementation</span>
+        <div key={i} className="h-48 bg-slate-50/50 border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center text-slate-300 gap-4 group hover:border-accent hover:bg-white transition-all cursor-wait">
+          <Package className="w-10 h-10 opacity-20 group-hover:opacity-40 group-hover:scale-110 transition-all" />
+          <div className="text-center">
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] block">Data Implementation</span>
+            <span className="text-[9px] font-bold text-slate-400 italic">Stage: Deployment Pending</span>
+          </div>
         </div>
       ))}
     </div>
